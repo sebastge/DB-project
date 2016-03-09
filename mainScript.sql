@@ -1,3 +1,16 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema TreningsDagbok
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema TreningsDagbok
+-- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `TreningsDagbok` DEFAULT CHARACTER SET utf8 ;
 -- -----------------------------------------------------
 -- Schema project
@@ -14,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `TreningsDagbok`.`trainingSession` (
   `duration` INT(3) NOT NULL,
   `personalForm` INT(1) NULL,
   `sessionIntent` VARCHAR(45) NULL,
+  `templateName` VARCHAR(45) NULL,
   PRIMARY KEY (`sessionID`))
 ENGINE = InnoDB;
 
@@ -196,4 +210,3 @@ CREATE TABLE IF NOT EXISTS `TreningsDagbok`.`category_has_category` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
