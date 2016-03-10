@@ -22,9 +22,9 @@ USE `TreningsDagbok` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `TreningsDagbok`.`trainingSession` (
   `sessionID` INT NOT NULL,
-  `date` INT(8) NOT NULL,
-  `time` INT(4) NOT NULL,
-  `duration` INT(3) NOT NULL,
+  `sessionDate` INT(8) NOT NULL,
+  `sessionTime` INT(4) NOT NULL,
+  `sessionDuration` INT(3) NOT NULL,
   `personalForm` INT(1) NULL,
   `sessionIntent` VARCHAR(45) NULL,
   `templateName` VARCHAR(45) NULL,
