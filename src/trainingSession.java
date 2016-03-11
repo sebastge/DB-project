@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 
 public class trainingSession {
@@ -40,7 +41,7 @@ public class trainingSession {
         }
         String sessionDate = day + month + year;
 
-        System.out.print("What time is it? (HHSS): ");
+        System.out.print("What time is it? (HHMM): ");
         String sessionTime = scr.nextLine();
 
         System.out.print("How long will you work out for? (mins): ");
@@ -85,8 +86,57 @@ public class trainingSession {
         }
     }
 
-    public void updateTrainingSession(){
+    public void updateTrainingSession() throws SQLException {
+        myCon = DriverManager.getConnection("jdbc:mysql://localhost/treningsdagbok", "root", "");
+        myStmt = myCon.createStatement();
 
+        System.out.println("Here are your training-sessions: (Select one by entering ID)");
+        System.out.println("ID, Date, Duration, Time, Personal form, Session intent");
+
+        ResultSet myRes = myStmt.executeQuery("SELECT * FROM trainingsession");
+        while (myRes.next()){
+            System.out.println(myRes.getString("sessionID") + ", " + myRes.getString("sessionDate") + ", " +
+                    myRes.getString("sessionDuration") + ", " + myRes.getString("sessionTime") + ", " +
+                    myRes.getString("personalForm") + ", " + myRes.getString("sessionIntent"));
+        }
+
+        String selectedSession = scr.nextLine();
+        myRes = myStmt.executeQuery("SELECT * FROM trainingsession WHERE sessionID = " + "'" + selectedSession + "'");
+        String sessionDate = "";
+        String sessionDuration = "";
+        String sessionTime = "";
+        String personalForm = "";
+        String sessionIntent = "";
+        while (myRes.next()){
+            sessionDate = myRes.getString("sessionDate");
+            sessionDuration = myRes.getString("sessionDuration");
+            sessionTime = myRes.getString("sessionTime");
+            personalForm = myRes.getString("personalForm");
+            sessionIntent = myRes.getString("sessionIntent");
+        }
+
+        System.out.println("For each entry please enter a new value");
+
+        System.out.print("Session Date (DDMMYYYY): (" + sessionDate + ") ");
+        String newSessionDate = scr.nextLine();
+
+        System.out.print("Session duration (mins): (" + sessionDuration + ") ");
+        String newSessionDuration = scr.nextLine();
+
+        System.out.print("Session time (HHMM): (" + sessionTime + ") ");
+        String newSessionTime = scr.nextLine();
+
+        System.out.print("Personal form (0-9): (" + personalForm + ") ");
+        String newPersonalForm = scr.nextLine();
+
+        System.out.print("Session intent (any string): (" + sessionIntent + ") ");
+        String newSessionIntent = scr.nextLine();
+
+        myStmt.executeUpdate("UPDATE trainingsession SET sessionDate = '" + newSessionDate + "' WHERE sessionID = '" + selectedSession + "'");
+        myStmt.executeUpdate("UPDATE trainingsession SET sessionDuration = '" + newSessionDuration + "' WHERE sessionID = '" + selectedSession + "'");
+        myStmt.executeUpdate("UPDATE trainingsession SET sessionTime = '" + newSessionTime + "' WHERE sessionID = '" + selectedSession + "'");
+        myStmt.executeUpdate("UPDATE trainingsession SET personalForm = '" + newPersonalForm + "' WHERE sessionID = '" + selectedSession + "'");
+        myStmt.executeUpdate("UPDATE trainingsession SET sessionIntent = '" + newSessionIntent + "' WHERE sessionID = '" + selectedSession + "'");
     }
 
     public void initializeDatabase(){
@@ -107,6 +157,8 @@ public class trainingSession {
                     + " values ('1990', '10042016', '1230', '120', '7', 'Better stamina')";
             myStmt.executeUpdate(sql);
 
+
+            //Create two cardiostrength-exercises
 
             sql = "insert into exercise" +
                     "(description, name, replacement, trainingSession_sessionID)" +
@@ -136,6 +188,38 @@ public class trainingSession {
             sql = "insert into cardiostrengthresult" +
                     "(cardioStrength_exercise_name, cardioStrength_exercise_trainingSession_sessionID, historyID, resultLoad, resultReps, resultSets)" +
                     "values('Squats', '1990', '0', '65', '7', '3')";
+            myStmt.executeUpdate(sql);
+
+
+            //Create two endurance-exercises
+            sql = "insert into exercise" +
+                    "(description, name, replacement, trainingSession_sessionID)" +
+                    "values ('Simply running', 'Running', 'None', '1991')";
+            myStmt.executeUpdate(sql);
+
+            sql = "insert into exercise" +
+                    "(description, name, replacement, trainingSession_sessionID)" +
+                    "values ('Simply running', 'Running', 'None', '1990')";
+            myStmt.executeUpdate(sql);
+
+            sql = "insert into endurance" +
+                    "(exercise_name, exercise_trainingSession_sessionID, goalDuration, goalLength)" +
+                    "values('Running', '1991', '30', '5')";
+            myStmt.executeUpdate(sql);
+
+            sql = "insert into endurance" +
+                    "(exercise_name, exercise_trainingSession_sessionID, goalDuration, goalLength)" +
+                    "values('Running', '1990', '30', '5')";
+            myStmt.executeUpdate(sql);
+
+            sql = "insert into enduranceresult" +
+                    "(endurance_exercise_name, endurance_exercise_trainingSession_sessionID, historyID, resultDuration, resultLength)" +
+                    "values('Running', '1991', '1', '30', '6')";
+            myStmt.executeUpdate(sql);
+
+            sql = "insert into enduranceresult" +
+                    "(endurance_exercise_name, endurance_exercise_trainingSession_sessionID, historyID, resultDuration, resultLength)" +
+                    "values('Running', '1990', '1', '30', '5')";
             myStmt.executeUpdate(sql);
 
             //ResultSet res = myStmt.executeQuery("SELECT * FROM trainingSession");
